@@ -349,6 +349,12 @@ class hardware:
                             'action': 'set_vesa_enable',
                             'type': 'bool',
                             },
+                        'dump_edid': {
+                            'order': 2,
+                            'value': '0',
+                            'action': 'set_dump_edid',
+                            'type': 'bool',
+                            },
                         },
                     },
                 'performance': {
@@ -667,6 +673,15 @@ class hardware:
             else:
                 self.struct['display']['settings']['vesa_enable']['value'] = '0'
 
+            if os.path.exists("/storage/.config/edid.bin"):
+                self.struct['display']['settings']['dump_edid']['value'] = '1'
+                self.struct['display']['settings']['dump_edid']['name'] = 32538
+                self.struct['display']['settings']['dump_edid']['InfoText'] = 915
+            else:
+                self.struct['display']['settings']['dump_edid']['value'] = '0'
+                self.struct['display']['settings']['dump_edid']['name'] = 32537
+                self.struct['display']['settings']['dump_edid']['InfoText'] = 914
+
             cpu_clusters = ["", "cpu0/"]
             for cluster in cpu_clusters:
                 sys_device = '/sys/devices/system/cpu/' + cluster + 'cpufreq/'
@@ -868,6 +883,30 @@ class hardware:
             self.oe.dbg_log('hardware::set_vesa_enable', 'exit_function', 0)
         except Exception as e:
             self.oe.dbg_log('hardware::set_vesa_enable', 'ERROR: (%s)' % repr(e), 4)
+        finally:
+            self.oe.set_busy(0)
+
+    def set_dump_edid(self, listItem=None):
+        try:
+            self.oe.dbg_log('hardware::set_dump_edid', 'enter_function', 0)
+            self.oe.set_busy(1)
+            if not listItem == None:
+                self.set_value(listItem)
+
+                if self.struct['display']['settings']['dump_edid']['value'] == '1':
+                    self.struct['display']['settings']['dump_edid']['name'] = 32538
+                    self.struct['display']['settings']['dump_edid']['InfoText'] = 915
+                    if not os.path.exists("/storage/.config/edid.bin"):
+                        subprocess.call("cat /sys/class/amhdmitx/amhdmitx0/rawedid > /storage/.config/edid.bin", shell=True)
+                else:
+                    self.struct['display']['settings']['dump_edid']['name'] = 32537
+                    self.struct['display']['settings']['dump_edid']['InfoText'] = 914
+                    if os.path.exists("/storage/.config/edid.bin"):
+                        subprocess.call("rm -rf /storage/.config/edid.bin", shell=True)
+
+            self.oe.dbg_log('hardware::set_dump_edid', 'exit_function', 0)
+        except Exception as e:
+            self.oe.dbg_log('hardware::set_dump_edid', 'ERROR: (%s)' % repr(e), 4)
         finally:
             self.oe.set_busy(0)
 

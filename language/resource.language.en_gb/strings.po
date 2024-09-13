@@ -408,6 +408,14 @@ msgctxt "#913"
 msgid "Choose if Motorcomm PHY is assembled"
 msgstr ""
 
+msgctxt "#914"
+msgid "Dump display EDID to edid.bin"
+msgstr ""
+
+msgctxt "#915"
+msgid "Use a previously dumped EDID"
+msgstr ""
+
 
 msgctxt "#32001"
 msgid "Services"
@@ -1322,6 +1330,14 @@ msgstr ""
 
 msgctxt "#32536"
 msgid "Motorcomm Ethernet Transceiver"
+msgstr ""
+
+msgctxt "#32537"
+msgid "Dump display EDID"
+msgstr ""
+
+msgctxt "#32538"
+msgid "Use dumped display EDID"
 msgstr ""
 
 
